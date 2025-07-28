@@ -14,39 +14,7 @@ Un microservicio de alto rendimiento construido con Spring WebFlux para gestiona
 
 El siguiente diagrama ilustra los dos flujos principales de la aplicación: la recepción de un evento externo que genera una notificación y la conexión de un cliente para recibirla en tiempo real.
 
-```mermaid
-graph TD
-    subgraph "Clientes y Sistemas Externos"
-        A["Sistema Externo<br>(Ej: Microservicio de Tareas)"]
-        B["Cliente Frontend<br>(Usuario Autenticado)"]
-    end
-
-    subgraph "Microservicio de Notificaciones (Spring WebFlux)"
-        C("Controlador REST<br>@RestController")
-        D("Servicio de Notificaciones<br>@Service")
-        E("Repositorio Reactivo<br>@Repository")
-        F["Base de Datos<br>(MongoDB)"]
-        G("Manejador WebSocket<br>@Component")
-        H("Spring Security")
-    end
-
-%% Flujo de Creación de Notificación
-    A -- "1 POST /api/notificaciones/eventos" --> C
-    C -- "2 Llama a procesarYEnviarNotificacion()" --> D
-    D -- "3 Guarda la notificación (save)" --> E
-    E -- "4 Persiste en DB" --> F
-    F -- "5 Devuelve Notificacion guardada" --> E
-    E -- "6 Devuelve Mono<Notificacion>" --> D
-    D -- "7 Llama a enviarNotificacionAUsuario()" --> G
-    G -- "8 Envía mensaje por WebSocket" --> B
-    D -- "9 Devuelve Mono<Notificacion>" --> C
-    C -- "10 201 Created" --> A
-
-%% Flujo de Conexión WebSocket
-    B -- "Conexión a<br>/ws/notificaciones/{userId}" --> G
-    G -- "Valida autenticación" --> H
-
-```
+![Arquitectura del Sistema](img/Screenshot_2.png)
 
 ## **🛠️ Tecnologías Utilizadas**
 
